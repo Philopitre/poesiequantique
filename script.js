@@ -1,9 +1,31 @@
-// Gestion de la visibilité des mots avec animation 
+// Gestion des mots sélectionnés pour la génération
+let selectedWords = [];
+
+// Gestion de la visibilité des mots avec animation et sélection pour la génération
 function toggleWordVisibility(element) {
   element.classList.add('word-toggling');
   
   setTimeout(() => {
     element.classList.toggle('word-hidden');
+    
+    // Logique de sélection/désélection pour la génération
+    const word = element.textContent;
+    if (element.classList.contains('word-hidden')) {
+      // Si le mot est caché/désactivé, le retirer de la sélection
+      const index = selectedWords.indexOf(word);
+      if (index > -1) {
+        selectedWords.splice(index, 1);
+      }
+    } else {
+      // Si le mot est visible/actif, l'ajouter à la sélection
+      if (!selectedWords.includes(word)) {
+        selectedWords.push(word);
+      }
+    }
+    
+    // Mise à jour de l'interface pour indiquer le nombre de mots sélectionnés
+    updateSelectedWordsCount();
+    
     element.classList.remove('word-toggling');
   }, 150);
   
@@ -15,9 +37,20 @@ function toggleWordVisibility(element) {
   }
 }
 
+// Fonction pour mettre à jour le compteur de mots sélectionnés
+function updateSelectedWordsCount() {
+  const countElement = document.getElementById('selectedWordsCount');
+  if (countElement) {
+    countElement.textContent = selectedWords.length;
+  }
+}
+
 // Réinitialisation de tous les mots avec effet cascade
 function resetAllWords() {
   const hiddenWords = document.querySelectorAll('.word-hidden');
+  
+  // Réinitialiser la liste des mots sélectionnés
+  selectedWords = [...words]; // Par défaut, tous les mots sont sélectionnés
   
   hiddenWords.forEach((word, index) => {
     setTimeout(() => {
@@ -28,6 +61,9 @@ function resetAllWords() {
       }, 150);
     }, index * 100);
   });
+  
+  // Mettre à jour le compteur de mots
+  updateSelectedWordsCount();
   
   if (hiddenWords.length > 0) {
     showNotification("Tous les mots ont été réinitialisés !");
@@ -41,6 +77,9 @@ const words = [
   "la", "souveraine", "intelligence", "pour", "moi-même", "grandissant"
 ];
 
+// Initialisation de la liste de mots sélectionnés avec tous les mots au départ
+selectedWords = [...words];
+
 // Variables d'état
 let isCombinationGenerated = false;
 let currentCombination = '';
@@ -53,12 +92,26 @@ window.onload = function() {
   updateStatistics();
   initializeResetCacheButton();
   
+  // Ajout du compteur de mots sélectionnés
+  addSelectedWordsCounter();
+  
   // Initialisation des événements pour la notation
   const ratingInputs = document.querySelectorAll('.rating input[type="radio"]');
   if (ratingInputs && ratingInputs.length > 0) {
     ratingInputs.forEach(input => input.addEventListener('change', handleRatingChange));
   }
 };
+
+// Ajouter un compteur de mots sélectionnés
+function addSelectedWordsCounter() {
+  const wordListContainer = document.querySelector('.full-word-list');
+  if (wordListContainer) {
+    const counterDiv = document.createElement('div');
+    counterDiv.className = 'selected-words-counter';
+    counterDiv.innerHTML = 'Mots sélectionnés: <span id="selectedWordsCount">' + selectedWords.length + '</span>';
+    wordListContainer.parentNode.insertBefore(counterDiv, wordListContainer.nextSibling);
+  }
+}
 
 // Initialisation du bouton de réinitialisation du cache 
 function initializeResetCacheButton() {
@@ -108,16 +161,21 @@ function populateWordCountOptions() {
   }
 }
 
-// Génération d'une combinaison aléatoire de mots
+// Fonction modifiée pour générer avec tous les mots disponibles
 function generateCombination() {
   const selectElement = document.getElementById('wordCount');
   if (!selectElement) return;
   
+  // Utiliser tous les mots disponibles (pas seulement les sélectionnés)
+  if (words.length === 0) {
+    return showNotification("Aucun mot n'est disponible !");
+  }
+  
   const selectedValue = selectElement.value;
   const count = selectedValue === 'surprise' ? Math.floor(Math.random() * words.length) + 1 : 
-               selectedValue === 'max' ? words.length : 
-               parseInt(selectedValue);
-
+              selectedValue === 'max' ? words.length : 
+              parseInt(selectedValue);
+  
   const wordsCopy = [...words];
   let combination = [];
 
@@ -145,6 +203,44 @@ function generateCombination() {
   if (feedbackElement) {
     feedbackElement.innerText = '';
   }
+}
+
+// Fonction modifiée pour générer avec tous les mots sélectionnés
+function generateWithSelectedOnly() {
+  // Vérifier s'il y a des mots sélectionnés
+  if (selectedWords.length === 0) {
+    return showNotification("Aucun mot n'est sélectionné ! Cliquez sur les mots grisés pour les activer.");
+  }
+  
+  // Utiliser TOUS les mots sélectionnés, indépendamment du nombre choisi dans le sélecteur
+  const wordsCopy = [...selectedWords];
+  
+  // Mélanger les mots pour obtenir un ordre aléatoire
+  for (let i = wordsCopy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [wordsCopy[i], wordsCopy[j]] = [wordsCopy[j], wordsCopy[i]]; // Échange
+  }
+  
+  // Capitalisation appropriée
+  const combination = wordsCopy.map((word, index) => 
+    index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : 
+    word === "Je" ? "je" : word
+  );
+  
+  currentCombination = combination.join(' ') + '.';
+  animateResult(currentCombination);
+
+  disableRatingInputs(false);
+  isCombinationGenerated = true;
+  setTimeout(resetRatingInputs, 10);
+  
+  const feedbackElement = document.getElementById('feedback');
+  if (feedbackElement) {
+    feedbackElement.innerText = '';
+  }
+  
+  // Notification pour informer l'utilisateur
+  showNotification(`Combinaison générée avec tous les ${selectedWords.length} mots sélectionnés.`);
 }
 
 // Animation de l'affichage du résultat avec effet machine à écrire
@@ -554,3 +650,4 @@ function generateImage() {
     showNotification("Erreur lors de la génération de l'image.");
   }
 }
+

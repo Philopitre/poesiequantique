@@ -1,3 +1,99 @@
+/* Styles ajoutés pour le compteur de mots sélectionnés */
+.selected-words-counter {
+  background-color: #026773;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.selected-words-counter:hover {
+  background-color: #024959;
+  transform: translateY(-2px);
+}
+
+#selectedWordsCount {
+  display: inline-block;
+  background-color: #F2E3D5;
+  color: #024959;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  margin-left: 8px;
+  font-weight: 700;
+}
+
+/* Styles existants pour les mots cliquables */
+.word-group-1 {
+  color: #ffffff;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  font-style: italic;
+  background-color: #012E40;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin: 0 3px;
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 4px rgba(1, 46, 64, 0.2);
+  border: 1px solid #024959;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.word-group-2 {
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  background-color: #026773;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin: 0 3px;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 4px rgba(2, 103, 115, 0.2);
+  border: 1px solid #3CA6A6;
+  cursor: pointer;
+}
+
+.word-group-1:hover, .word-group-2:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.word-hidden {
+  opacity: 0.2;
+  transform: scale(0.85);
+  filter: grayscale(100%);
+}
+
+/* Ajuster l'espacement et le style de la div contenant les mots */
+.full-word-list {
+  line-height: 2.5;
+  padding: 20px;
+  background-color: #F2E3D5;
+  font-size: 1.05rem;
+}
+
+/* Animation pour les mots qui disparaissent/apparaissent */
+@keyframes toggleWord {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.8); }
+  100% { transform: scale(1); }
+}
+
+.word-toggling {
+  animation: toggleWord 0.3s ease;
+}
+
 /* Ajout du style pour l'affichage du texte complet */
 .word-group-1 {
   color: #ffffff;
