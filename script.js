@@ -650,4 +650,3 @@ function generateImage() {
     showNotification("Erreur lors de la génération de l'image.");
   }
 }
-
