@@ -381,6 +381,16 @@ select:focus {
   word-wrap: break-word;
 }
 
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.9rem;
+  color: #024959;
+  background-color: transparent;
+  font-family: 'Poppins', sans-serif;
+  margin-top: 40px;
+}
+
 .notification.fade-out {
   opacity: 0;
   transform: translateX(-50%) translateY(30px);
