@@ -64,7 +64,7 @@ function exportPDF() {
     y += 10;
     doc.text("2. Rêveur, mon métier exceptionnel est pour moi-même grandissant.", 10, y);
     y += 10;
-    const textComplet = "3.Je suis rêveur professionel dans mon métier exceptionel l'erreur en tout genre est proscritez la souveraine intelligence pour moi-même grandissant";
+    const textComplet = "3. Je suis rêveur professionel dans mon métier exceptionel l'erreur en tout genre est proscritez la souveraine intelligence pour moi-même grandissant";
     doc.text(doc.splitTextToSize(textComplet, maxWidth), 10, y);
     y += 15;
     
