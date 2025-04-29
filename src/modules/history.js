@@ -91,16 +91,19 @@ function updateHistory() {
     const buttonsContainer = document.createElement('div');
     buttonsContainer.style.marginTop = '10px';
 
-    const createButton = (text, handler) => {
+    const createButton = (text, handler, tooltip) => {
       const button = document.createElement('button');
       button.textContent = text;
       button.onclick = handler;
+      if (tooltip) {
+        button.title = tooltip;
+      }
       buttonsContainer.appendChild(button);
     };
 
-    createButton('⬆️', sortHistoryUp);
-    createButton('⬇️', sortHistoryDown);
-    createButton('🎲', randomizeSortHistory);
+    createButton('⬆️', sortHistoryUp, 'Trier par note : de la plus petite à la plus grande');
+    createButton('⬇️', sortHistoryDown, 'Trier par note : de la plus grande à la plus petite');
+    createButton('🎲', randomizeSortHistory, 'Mélanger aléatoirement les combinaisons');
     createButton('Exporter TXT 📄', exportTXT);
     createButton('Exporter PDF 🖨️', exportPDF);
 
@@ -141,17 +144,23 @@ function initializeResetCacheButton() {
  */
 function sortHistoryUp() {
   history.sort((a, b) => a.note - b.note);
+  saveHistory(history); // Sauvegarde des modifications dans le localStorage
   updateHistory();
+  showNotification("Historique trié par note croissante");
 }
 
 function sortHistoryDown() {
   history.sort((a, b) => b.note - a.note);
+  saveHistory(history); // Sauvegarde des modifications dans le localStorage
   updateHistory();
+  showNotification("Historique trié par note décroissante");
 }
 
 function randomizeSortHistory() {
   history.sort(() => Math.random() - 0.5);
+  saveHistory(history); // Sauvegarde des modifications dans le localStorage
   updateHistory();
+  showNotification("Historique mélangé aléatoirement");
 }
 
 /**

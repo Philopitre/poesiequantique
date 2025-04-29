@@ -1,85 +1,26 @@
 // ================================================================
-// Utilitaire de gestion du stockage local
+// Utilitaire de gestion du stockage local - Version de compatibilité
 // ================================================================
 
 /**
- * Module d'abstraction du localStorage pour la gestion des données persistantes
- * Facilite l'accès, la sauvegarde et la manipulation des données stockées
+ * Ce module est maintenu pour la compatibilité avec le code existant.
+ * Il réexporte simplement les fonctions du module storage.js pour éviter
+ * les duplications et maintenir la cohérence.
+ * 
+ * IMPORTANT: Pour les nouveaux développements, utilisez directement 
+ * les fonctions de storage.js
  */
 
-// Clés de stockage
-const STORAGE_KEYS = {
-  HISTORY: 'history'
-};
+import {
+  STORAGE_KEYS,
+  saveToStorage,
+  getFromStorage, // Nous utilisons cette fonction au lieu de loadFromStorage pour la compatibilité
+  removeFromStorage,
+  hasStorageItem,
+  clearAllStorage
+} from './storage.js';
 
-/**
- * Sauvegarde des données dans le localStorage
- * @param {string} key - Clé de stockage
- * @param {any} data - Données à stocker (seront converties en JSON)
- */
-function saveToStorage(key, data) {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-    return true;
-  } catch (error) {
-    console.error(`Erreur lors de la sauvegarde des données (${key}):`, error);
-    return false;
-  }
-}
-
-/**
- * Récupération des données depuis le localStorage
- * @param {string} key - Clé de stockage à récupérer
- * @param {any} defaultValue - Valeur par défaut si aucune donnée n'est trouvée
- * @returns {any} Les données récupérées ou la valeur par défaut
- */
-function getFromStorage(key, defaultValue = null) {
-  try {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : defaultValue;
-  } catch (error) {
-    console.error(`Erreur lors de la récupération des données (${key}):`, error);
-    return defaultValue;
-  }
-}
-
-/**
- * Suppression des données du localStorage
- * @param {string} key - Clé de stockage à supprimer
- */
-function removeFromStorage(key) {
-  try {
-    localStorage.removeItem(key);
-    return true;
-  } catch (error) {
-    console.error(`Erreur lors de la suppression des données (${key}):`, error);
-    return false;
-  }
-}
-
-/**
- * Vérifie si une clé existe dans le localStorage
- * @param {string} key - Clé à vérifier
- * @returns {boolean} Vrai si la clé existe
- */
-function hasStorageItem(key) {
-  return localStorage.getItem(key) !== null;
-}
-
-/**
- * Efface toutes les données du localStorage
- */
-function clearAllStorage() {
-  try {
-    localStorage.clear();
-    return true;
-  } catch (error) {
-    console.error('Erreur lors de la suppression de toutes les données:', error);
-    return false;
-  }
-}
-
-// API publique du module
+// Réexportation des fonctions pertinentes
 export {
   STORAGE_KEYS,
   saveToStorage,

@@ -11,56 +11,111 @@ import { showNotification } from './ui.js';
 // Variables d'état
 let isCombinationGenerated = false;
 let currentCombination = '';
+let typingAnimation = null;
 
 /**
  * Animation de l'affichage du résultat avec effet machine à écrire
  * @param {string} text - Le texte à animer
+ * @returns {Promise} - Promise qui se résout quand l'animation est terminée
  */
 function animateResult(text) {
-  const result = document.getElementById('result');
-  if (!result) return;
-  
-  result.innerHTML = '';
-  let index = 0;
-  
-  const sound = document.getElementById('typewriterSound');
-  const cursor = document.createElement('span');
-  cursor.className = 'cursor';
-  cursor.textContent = '|';
-  result.appendChild(cursor);
+  return new Promise(resolve => {
+    const result = document.getElementById('result');
+    if (!result) {
+      resolve();
+      return;
+    }
+    
+    // Annuler toute animation en cours
+    if (typingAnimation) {
+      clearTimeout(typingAnimation);
+      typingAnimation = null;
+    }
+    
+    result.innerHTML = '';
+    let index = 0;
+    
+    const sound = document.getElementById('typewriterSound');
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    cursor.textContent = '|';
+    result.appendChild(cursor);
 
-  function typeLetter() {
-    if (index < text.length) {
-      cursor.insertAdjacentText('beforebegin', text[index]);
-      if (text[index] !== ' ' && sound) {
-        // Vérification plus robuste avant de jouer le son
-        if (typeof sound.play === 'function') {
-          try {
-            sound.currentTime = 0;
-            sound.play().catch(err => console.log('Audio playback error:', err));
-          } catch (err) {
-            console.log('Audio playback error:', err);
+    // Pré-charger le son pour éviter les délais
+    if (sound && typeof sound.load === 'function') {
+      try {
+        sound.load();
+      } catch (err) {
+        console.log('Audio preload error:', err);
+      }
+    }
+
+    function typeLetter() {
+      if (index < text.length) {
+        cursor.insertAdjacentText('beforebegin', text[index]);
+        if (text[index] !== ' ' && sound) {
+          // Vérification plus robuste avant de jouer le son
+          if (typeof sound.play === 'function') {
+            try {
+              sound.currentTime = 0;
+              sound.play().catch(err => console.log('Audio playback error:', err));
+            } catch (err) {
+              console.log('Audio playback error:', err);
+            }
           }
         }
+        index++;
+        typingAnimation = setTimeout(typeLetter, 80);
+      } else {
+        cursor.classList.add('blink');
+        typingAnimation = null;
+        resolve();
       }
-      index++;
-      setTimeout(typeLetter, 80);
-    } else {
-      cursor.classList.add('blink');
     }
-  }
 
-  typeLetter();
+    typeLetter();
+  });
 }
 
 /**
- * Fonction pour générer avec tous les mots disponibles
+ * Capitalise une phrase correctement
+ * @param {string[]} wordsArray - Tableau de mots à formater
+ * @returns {string[]} - Tableau de mots formatés
+ */
+function formatSentence(wordsArray) {
+  return wordsArray.map((word, index) => 
+    index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : 
+    word === "Je" ? "je" : word
+  );
+}
+
+/**
+ * Méthode commune pour finaliser la génération
+ * @param {string} combination - La combinaison générée
+ */
+async function finalizeCombination(combination) {
+  currentCombination = combination;
+  await animateResult(currentCombination);
+
+  disableRatingInputs(false);
+  isCombinationGenerated = true;
+  resetRatingInputs();
+  
+  const feedbackElement = document.getElementById('feedback');
+  if (feedbackElement) {
+    feedbackElement.innerText = '';
+  }
+}
+
+/**
+ * Fonction pour générer avec un nombre spécifique de mots aléatoires
+ * parmi tous les mots disponibles
  */
 function generateCombination() {
   const selectElement = document.getElementById('wordCount');
   if (!selectElement) return;
   
-  // Utiliser tous les mots disponibles (pas seulement les sélectionnés)
+  // Vérifier que des mots sont disponibles
   if (words.length === 0) {
     return showNotification("Aucun mot n'est disponible !");
   }
@@ -71,36 +126,24 @@ function generateCombination() {
               parseInt(selectedValue);
   
   const wordsCopy = [...words];
-  let combination = [];
+  const randomlySelectedWords = [];
 
-  // Sélection aléatoire des mots
+  // Sélection aléatoire des mots selon le nombre choisi dans le sélecteur
   for (let i = 0; i < count && wordsCopy.length > 0; i++) {
     const randomIndex = Math.floor(Math.random() * wordsCopy.length);
-    combination.push(wordsCopy[randomIndex]);
+    randomlySelectedWords.push(wordsCopy[randomIndex]);
     wordsCopy.splice(randomIndex, 1);
   }
 
-  // Capitalisation appropriée
-  combination = combination.map((word, index) => 
-    index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : 
-    word === "Je" ? "je" : word
-  );
-  
-  currentCombination = combination.join(' ') + '.';
-  animateResult(currentCombination);
-
-  disableRatingInputs(false);
-  isCombinationGenerated = true;
-  setTimeout(resetRatingInputs, 10);
-  
-  const feedbackElement = document.getElementById('feedback');
-  if (feedbackElement) {
-    feedbackElement.innerText = '';
-  }
+  // Formatage et finalisation
+  const formattedWords = formatSentence(randomlySelectedWords);
+  finalizeCombination(formattedWords.join(' ') + '.');
 }
 
 /**
- * Fonction pour générer avec tous les mots sélectionnés
+ * Fonction pour générer une combinaison en utilisant TOUS les mots
+ * qui ont été explicitement sélectionnés par l'utilisateur,
+ * indépendamment du nombre choisi dans le sélecteur
  */
 function generateWithSelectedOnly() {
   // Vérifier s'il y a des mots sélectionnés
@@ -108,7 +151,7 @@ function generateWithSelectedOnly() {
     return showNotification("Aucun mot n'est sélectionné ! Cliquez sur les mots grisés pour les activer.");
   }
   
-  // Utiliser TOUS les mots sélectionnés, indépendamment du nombre choisi dans le sélecteur
+  // Utiliser TOUS les mots sélectionnés et les mélanger
   const wordsCopy = [...selectedWords];
   
   // Mélanger les mots pour obtenir un ordre aléatoire
@@ -117,44 +160,57 @@ function generateWithSelectedOnly() {
     [wordsCopy[i], wordsCopy[j]] = [wordsCopy[j], wordsCopy[i]]; // Échange
   }
   
-  // Capitalisation appropriée
-  const combination = wordsCopy.map((word, index) => 
-    index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : 
-    word === "Je" ? "je" : word
-  );
-  
-  currentCombination = combination.join(' ') + '.';
-  animateResult(currentCombination);
-
-  disableRatingInputs(false);
-  isCombinationGenerated = true;
-  setTimeout(resetRatingInputs, 10);
-  
-  const feedbackElement = document.getElementById('feedback');
-  if (feedbackElement) {
-    feedbackElement.innerText = '';
-  }
+  // Formatage et finalisation
+  const formattedWords = formatSentence(wordsCopy);
+  finalizeCombination(formattedWords.join(' ') + '.');
   
   // Notification pour informer l'utilisateur
   showNotification(`Combinaison générée avec tous les ${selectedWords.length} mots sélectionnés.`);
 }
 
 /**
- * Remplissage du sélecteur de nombre de mots
+ * Remplissage du sélecteur de nombre de mots avec mise en cache
  */
 function populateWordCountOptions() {
   const select = document.getElementById('wordCount');
   if (!select) return;
   
-  select.innerHTML = '';
-  select.add(new Option('Surprise 🎲', 'surprise'));
-
-  for (let i = 1; i < words.length; i++) {
-    select.add(new Option(`${i} mot${i > 1 ? 's' : ''}`, i));
+  // Optimisation: éviter de recréer toutes les options si le nombre de mots n'a pas changé
+  const currentOptionsCount = select.options.length;
+  const expectedOptionsCount = words.length + 2; // +2 pour "Surprise" et "Maximum"
+  
+  if (currentOptionsCount !== expectedOptionsCount) {
+    // Effacer seulement si nécessaire
+    select.innerHTML = '';
+    
+    // Créer un fragment pour améliorer les performances
+    const fragment = document.createDocumentFragment();
+    
+    // Ajouter l'option "Surprise"
+    const surpriseOption = new Option('Surprise 🎲', 'surprise');
+    fragment.appendChild(surpriseOption);
+    
+    // Ajouter les options numériques
+    for (let i = 1; i < words.length; i++) {
+      const option = new Option(`${i} mot${i > 1 ? 's' : ''}`, i);
+      fragment.appendChild(option);
+    }
+    
+    // Ajouter l'option "Maximum"
+    const maxOption = new Option('Maximum 🌟', 'max');
+    fragment.appendChild(maxOption);
+    
+    // Ajouter tout en une seule opération DOM
+    select.appendChild(fragment);
   }
 
-  select.add(new Option('Maximum 🌟', 'max'));
+  resetUI();
+}
 
+/**
+ * Réinitialise l'interface utilisateur
+ */
+function resetUI() {
   disableRatingInputs(true);
   resetRatingInputs();
   
@@ -168,6 +224,10 @@ function populateWordCountOptions() {
   if (feedbackElement) {
     feedbackElement.innerText = '';
   }
+  
+  // Réinitialiser l'état
+  isCombinationGenerated = false;
+  currentCombination = '';
 }
 
 /**
@@ -175,6 +235,13 @@ function populateWordCountOptions() {
  */
 function initialize() {
   populateWordCountOptions();
+  
+  // Nettoyage lorsque la page est déchargée
+  window.addEventListener('beforeunload', () => {
+    if (typingAnimation) {
+      clearTimeout(typingAnimation);
+    }
+  });
 }
 
 // Exporter les fonctions et variables publiques
@@ -184,5 +251,6 @@ export {
   generateCombination,
   generateWithSelectedOnly,
   populateWordCountOptions,
-  initialize
+  initialize,
+  resetUI
 };
