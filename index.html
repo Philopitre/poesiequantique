@@ -113,10 +113,6 @@
     </div>
 
     <div id="history">
-      <h3>Historique des combinaisons :</h3>
-      <div>1. Grandissant exceptionnel en professionnel l'erreur tout mon genre. (Note : 6/10)</div>
-      <div>2. La en l'erreur mon. (Note : 6/10)</div>
-      <div>3. Moi-même souveraine rêveur pour grandissant proscrite en mon intelligence professionnel la exceptionnel suis métier. (Note : 8/10)</div>
       <div style="margin-top: 10px;">
         <button onclick="sortHistoryUp()">⬆️</button>
         <button onclick="sortHistoryDown()">⬇️</button>
@@ -126,11 +122,10 @@
       </div>
       <button id="resetCacheButton" onclick="resetCache()">Reset du cache ♻️</button>
     </div>
-    <footer>
-      © Tous droits réservés — Les éditions augmentées Provoq'émois
-    </footer> 
-    <audio id="typewriterSound" src="sons/typewriter.mp3" preload="auto"></audio>
   </div>
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
+
+  <div id="notificationBar" class="notification-bar" style="display: none;"></div>
 </body>
+
 </html>

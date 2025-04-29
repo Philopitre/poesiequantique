@@ -20,7 +20,6 @@
   color: #ffffff;
   font-family: 'Courier New', monospace;
   font-weight: 700;
-  text-transform: uppercase;
   background-color: #026773;
   padding: 4px 8px;
   border-radius: 4px;
@@ -381,16 +380,6 @@ select:focus {
   word-wrap: break-word;
 }
 
-footer {
-  text-align: center;
-  padding: 20px;
-  font-size: 0.9rem;
-  color: #024959;
-  background-color: transparent;
-  font-family: 'Poppins', sans-serif;
-  margin-top: 40px;
-}
-
 .notification.fade-out {
   opacity: 0;
   transform: translateX(-50%) translateY(30px);
@@ -564,4 +553,28 @@ footer {
     margin: 5px auto;
     padding: 10px;
   }
+}
+
+/* Notification bar personnalisée */
+.notification-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #026773;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  z-index: 1000;
+  transition: all 0.5s ease;
+  box-shadow: 0 5px 15px rgba(1, 46, 64, 0.2);
+  font-weight: 500;
+  max-width: 90%;
+  word-wrap: break-word;
+  font-family: 'Poppins', sans-serif;
+}
+
+.notification-bar.fade-out {
+  opacity: 0;
+  transform: translateX(-50%) translateY(30px);
 }
