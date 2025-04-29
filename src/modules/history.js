@@ -9,7 +9,12 @@ import { showNotification } from './ui.js';
 import { loadHistory, saveHistory, clearHistory } from '../utils/storage.js';
 
 // Récupération de l'historique depuis le localStorage
-let history = loadHistory() || [];
+// On vérifie explicitement que le résultat est bien un tableau non vide
+let history = loadHistory();
+// Vérification plus stricte pour s'assurer que history est un tableau non-null avec au moins un élément
+if (!history || !Array.isArray(history) || history.length === 0) {
+  history = [];
+}
 
 /**
  * Animation d'un élément statistique
@@ -30,11 +35,21 @@ function animateStatistic(elementId, text) {
  */
 function updateStatistics() {
   const total = history.length;
+  
+  // Si l'historique est vide, afficher des tirets pour toutes les statistiques
+  if (total === 0) {
+    animateStatistic('totalCombinations', `Total des combinaisons notées : 0`);
+    animateStatistic('averageNote', `Note moyenne : -`);
+    animateStatistic('bestNote', `Meilleure note : -`);
+    animateStatistic('worstNote', `Pire note : -`);
+    return;
+  }
+  
   const notes = history.map(entry => entry.note);
   const sum = notes.reduce((a, b) => a + b, 0);
-  const average = total > 0 ? (sum / total).toFixed(2) : '-';
-  const best = total > 0 ? Math.max(...notes) : '-';
-  const worst = total > 0 ? Math.min(...notes) : '-';
+  const average = (sum / total).toFixed(2);
+  const best = Math.max(...notes);
+  const worst = Math.min(...notes);
 
   animateStatistic('totalCombinations', `Total des combinaisons notées : ${total}`);
   animateStatistic('averageNote', `Note moyenne : ${average}`);
@@ -56,6 +71,15 @@ function updateHistory() {
   historyContainer.innerHTML = staticHTML;
 
   // Ajout des entrées d'historique
+  if (history.length === 0) {
+    const emptyMessage = document.createElement('div');
+    emptyMessage.textContent = 'Aucune combinaison notée pour le moment.';
+    emptyMessage.style.fontStyle = 'italic';
+    emptyMessage.style.color = '#777';
+    historyContainer.appendChild(emptyMessage);
+    return;
+  }
+
   history.forEach((entry, index) => {
     const div = document.createElement('div');
     div.textContent = `${index + 1}. ${entry.text} (Note : ${entry.note}/10)`;

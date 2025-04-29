@@ -35,15 +35,49 @@ function exportPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
-    doc.setFont("helvetica");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("La poésie quantique", 105, 20, { align: "center" });
+    
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
     
-    // En-têtes du document
-    doc.text("La poésie quantique est une invention originale de Philow pour les éditions Provoq'émois.", 10, 20);
-    doc.text("Historique des combinaisons notées :", 10, 30);
-    
-    let y = 40;
+    let y = 30;
     const maxWidth = 180;
+    
+    // Intro
+    const intro = "Une invention originale de Philow pour les éditions augmentées Provoq'émois.";
+    doc.text(doc.splitTextToSize(intro, maxWidth), 10, y);
+    y += 15;
+    
+    const concept = "Ce concept explore l’idée qu’un même poème peut contenir plusieurs lectures simultanées, comme des états superposés en physique quantique.";
+    doc.text(doc.splitTextToSize(concept, maxWidth), 10, y);
+    y += 20;
+    
+    // Preuve poétique
+    doc.setFont("helvetica", "italic");
+    doc.text("Preuve de concept :", 10, y);
+    y += 10;
+    
+    doc.setFont("helvetica", "normal");
+    doc.text("1. Je suis professionnel dans l’erreur en tout genre proscrite, la souveraine intelligence.", 10, y);
+    y += 10;
+    doc.text("2. Rêveur, mon métier exceptionnel est pour moi-même grandissant.", 10, y);
+    y += 10;
+    const textComplet = "3.Je suis rêveur professionel dans mon métier exceptionel l'erreur en tout genre est proscritez la souveraine intelligence pour moi-même grandissant";
+    doc.text(doc.splitTextToSize(textComplet, maxWidth), 10, y);
+    y += 15;
+    
+    // Conclusion
+    const conclusion = "Chaque combinaison générée par ce programme peut, elle aussi, porter un sens multiple.";
+    doc.text(doc.splitTextToSize(conclusion, maxWidth), 10, y);
+    y += 15;
+    
+    // Historique ensuite
+    doc.setFont("helvetica", "bold");
+    doc.text("Historique des combinaisons notées :", 10, y);
+    y += 10;
+    
     
     // Génération du contenu
     history.forEach((entry, index) => {
@@ -53,7 +87,7 @@ function exportPDF() {
       // Gestion des sauts de page
       if (y + (splitText.length * 8) > 280) {
         doc.addPage();
-        y = 20;
+        y = 15;
       }
       
       doc.text(splitText, 10, y);
