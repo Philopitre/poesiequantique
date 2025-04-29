@@ -11,10 +11,29 @@ import { showNotification } from './ui.js';
 // Variables d'état
 let isCombinationGenerated = false;
 let currentCombination = '';
-let typingAnimation = null;
+let animationFrameId = null;
+let typewriterSound = null;
 
 /**
- * Animation de l'affichage du résultat avec effet machine à écrire
+ * Préchargement du son pour éviter les délais
+ */
+function preloadSound() {
+  const sound = document.getElementById('typewriterSound');
+  if (sound && !typewriterSound) {
+    typewriterSound = sound;
+    if (typeof sound.load === 'function') {
+      try {
+        sound.load();
+      } catch (err) {
+        console.log('Audio preload error:', err);
+      }
+    }
+  }
+}
+
+/**
+ * Animation de l'affichage du résultat avec effet machine à écrire optimisé
+ * Utilise requestAnimationFrame au lieu de setTimeout pour de meilleures performances
  * @param {string} text - Le texte à animer
  * @returns {Promise} - Promise qui se résout quand l'animation est terminée
  */
@@ -27,53 +46,67 @@ function animateResult(text) {
     }
     
     // Annuler toute animation en cours
-    if (typingAnimation) {
-      clearTimeout(typingAnimation);
-      typingAnimation = null;
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
     }
     
     result.innerHTML = '';
     let index = 0;
+    let lastTimestamp = 0;
+    const typingInterval = 80; // Intervalle entre chaque lettre (en ms)
     
-    const sound = document.getElementById('typewriterSound');
+    // Précharger le son
+    preloadSound();
+    
     const cursor = document.createElement('span');
     cursor.className = 'cursor';
     cursor.textContent = '|';
     result.appendChild(cursor);
 
-    // Pré-charger le son pour éviter les délais
-    if (sound && typeof sound.load === 'function') {
-      try {
-        sound.load();
-      } catch (err) {
-        console.log('Audio preload error:', err);
-      }
-    }
-
-    function typeLetter() {
-      if (index < text.length) {
-        cursor.insertAdjacentText('beforebegin', text[index]);
-        if (text[index] !== ' ' && sound) {
-          // Vérification plus robuste avant de jouer le son
-          if (typeof sound.play === 'function') {
-            try {
-              sound.currentTime = 0;
-              sound.play().catch(err => console.log('Audio playback error:', err));
-            } catch (err) {
-              console.log('Audio playback error:', err);
+    function typeLetter(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      
+      const elapsed = timestamp - lastTimestamp;
+      
+      if (elapsed >= typingInterval) {
+        if (index < text.length) {
+          cursor.insertAdjacentText('beforebegin', text[index]);
+          
+          if (text[index] !== ' ' && typewriterSound) {
+            // Jouer le son de manière plus efficace
+            if (typeof typewriterSound.play === 'function') {
+              try {
+                // Cloner le nœud audio pour éviter les problèmes de lecture simultanée
+                const soundClone = typewriterSound.cloneNode();
+                soundClone.volume = 0.5; // Réduire le volume pour éviter la saturation
+                
+                // Libérer la mémoire après la lecture
+                soundClone.addEventListener('ended', () => {
+                  soundClone.remove();
+                }, { once: true });
+                
+                soundClone.play().catch(err => console.log('Audio playback error:', err));
+              } catch (err) {
+                console.log('Audio playback error:', err);
+              }
             }
           }
+          
+          index++;
+          lastTimestamp = timestamp;
+        } else {
+          cursor.classList.add('blink');
+          animationFrameId = null;
+          resolve();
+          return;
         }
-        index++;
-        typingAnimation = setTimeout(typeLetter, 80);
-      } else {
-        cursor.classList.add('blink');
-        typingAnimation = null;
-        resolve();
       }
+      
+      animationFrameId = requestAnimationFrame(typeLetter);
     }
 
-    typeLetter();
+    animationFrameId = requestAnimationFrame(typeLetter);
   });
 }
 
@@ -83,6 +116,7 @@ function animateResult(text) {
  * @returns {string[]} - Tableau de mots formatés
  */
 function formatSentence(wordsArray) {
+  // Création d'une copie pour éviter de muter l'argument d'origine
   return wordsArray.map((word, index) => 
     index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : 
     word === "Je" ? "je" : word
@@ -108,8 +142,29 @@ async function finalizeCombination(combination) {
 }
 
 /**
+ * Sélection aléatoire d'éléments d'un tableau sans le modifier
+ * @param {Array} array - Tableau source
+ * @param {number} count - Nombre d'éléments à sélectionner
+ * @returns {Array} - Nouveaux éléments sélectionnés
+ */
+function getRandomElements(array, count) {
+  // Créer une copie pour ne pas modifier l'original
+  const arrayCopy = [...array];
+  const result = [];
+  const n = Math.min(count, arrayCopy.length);
+  
+  for (let i = 0; i < n; i++) {
+    const randomIndex = Math.floor(Math.random() * arrayCopy.length);
+    result.push(arrayCopy[randomIndex]);
+    arrayCopy.splice(randomIndex, 1);
+  }
+  
+  return result;
+}
+
+/**
  * Fonction pour générer avec un nombre spécifique de mots aléatoires
- * parmi tous les mots disponibles
+ * parmi tous les mots disponibles - optimisée
  */
 function generateCombination() {
   const selectElement = document.getElementById('wordCount');
@@ -125,15 +180,8 @@ function generateCombination() {
               selectedValue === 'max' ? words.length : 
               parseInt(selectedValue);
   
-  const wordsCopy = [...words];
-  const randomlySelectedWords = [];
-
-  // Sélection aléatoire des mots selon le nombre choisi dans le sélecteur
-  for (let i = 0; i < count && wordsCopy.length > 0; i++) {
-    const randomIndex = Math.floor(Math.random() * wordsCopy.length);
-    randomlySelectedWords.push(wordsCopy[randomIndex]);
-    wordsCopy.splice(randomIndex, 1);
-  }
+  // Utiliser la fonction utilitaire pour la sélection aléatoire
+  const randomlySelectedWords = getRandomElements(words, count);
 
   // Formatage et finalisation
   const formattedWords = formatSentence(randomlySelectedWords);
@@ -141,9 +189,26 @@ function generateCombination() {
 }
 
 /**
+ * Mélange un tableau en utilisant l'algorithme Fisher-Yates
+ * @param {Array} array - Tableau à mélanger
+ * @returns {Array} - Tableau mélangé
+ */
+function shuffleArray(array) {
+  // Créer une copie pour ne pas modifier l'original
+  const result = [...array];
+  
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]]; // Échange
+  }
+  
+  return result;
+}
+
+/**
  * Fonction pour générer une combinaison en utilisant TOUS les mots
  * qui ont été explicitement sélectionnés par l'utilisateur,
- * indépendamment du nombre choisi dans le sélecteur
+ * indépendamment du nombre choisi dans le sélecteur - optimisée
  */
 function generateWithSelectedOnly() {
   // Vérifier s'il y a des mots sélectionnés
@@ -151,17 +216,11 @@ function generateWithSelectedOnly() {
     return showNotification("Aucun mot n'est sélectionné ! Cliquez sur les mots grisés pour les activer.");
   }
   
-  // Utiliser TOUS les mots sélectionnés et les mélanger
-  const wordsCopy = [...selectedWords];
-  
-  // Mélanger les mots pour obtenir un ordre aléatoire
-  for (let i = wordsCopy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [wordsCopy[i], wordsCopy[j]] = [wordsCopy[j], wordsCopy[i]]; // Échange
-  }
+  // Utiliser la fonction de mélange optimisée
+  const shuffledWords = shuffleArray(selectedWords);
   
   // Formatage et finalisation
-  const formattedWords = formatSentence(wordsCopy);
+  const formattedWords = formatSentence(shuffledWords);
   finalizeCombination(formattedWords.join(' ') + '.');
   
   // Notification pour informer l'utilisateur
@@ -169,7 +228,31 @@ function generateWithSelectedOnly() {
 }
 
 /**
- * Remplissage du sélecteur de nombre de mots avec mise en cache
+ * Création optimisée des options du sélecteur
+ * @param {HTMLSelectElement} select - Élément select à remplir
+ * @param {number} wordCount - Nombre de mots disponibles
+ */
+function createWordCountOptions(select, wordCount) {
+  // Créer un fragment pour améliorer les performances
+  const fragment = document.createDocumentFragment();
+  
+  // Ajouter l'option "Surprise"
+  fragment.appendChild(new Option('Surprise 🎲', 'surprise'));
+  
+  // Ajouter les options numériques
+  for (let i = 1; i < wordCount; i++) {
+    fragment.appendChild(new Option(`${i} mot${i > 1 ? 's' : ''}`, i));
+  }
+  
+  // Ajouter l'option "Maximum"
+  fragment.appendChild(new Option('Maximum 🌟', 'max'));
+  
+  // Ajouter tout en une seule opération DOM
+  select.appendChild(fragment);
+}
+
+/**
+ * Remplissage du sélecteur de nombre de mots avec mise en cache - optimisé
  */
 function populateWordCountOptions() {
   const select = document.getElementById('wordCount');
@@ -182,26 +265,7 @@ function populateWordCountOptions() {
   if (currentOptionsCount !== expectedOptionsCount) {
     // Effacer seulement si nécessaire
     select.innerHTML = '';
-    
-    // Créer un fragment pour améliorer les performances
-    const fragment = document.createDocumentFragment();
-    
-    // Ajouter l'option "Surprise"
-    const surpriseOption = new Option('Surprise 🎲', 'surprise');
-    fragment.appendChild(surpriseOption);
-    
-    // Ajouter les options numériques
-    for (let i = 1; i < words.length; i++) {
-      const option = new Option(`${i} mot${i > 1 ? 's' : ''}`, i);
-      fragment.appendChild(option);
-    }
-    
-    // Ajouter l'option "Maximum"
-    const maxOption = new Option('Maximum 🌟', 'max');
-    fragment.appendChild(maxOption);
-    
-    // Ajouter tout en une seule opération DOM
-    select.appendChild(fragment);
+    createWordCountOptions(select, words.length);
   }
 
   resetUI();
@@ -235,11 +299,12 @@ function resetUI() {
  */
 function initialize() {
   populateWordCountOptions();
+  preloadSound();
   
   // Nettoyage lorsque la page est déchargée
   window.addEventListener('beforeunload', () => {
-    if (typingAnimation) {
-      clearTimeout(typingAnimation);
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
     }
   });
 }
