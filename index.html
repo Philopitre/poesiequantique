@@ -9,7 +9,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="container">
+ <div class="container">
+   <!--  <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="theme-switch">
+        <input type="checkbox" id="theme-switch" />
+        <span class="slider">
+          <span class="icon sun-icon">☀️</span>
+          <span class="icon moon-icon">🌙</span>
+        </span>
+      </label>
+    </div>>-->
     <h1>Générateur de Combinaisons Poétiques 🌟</h1>
     
     <!-- Nouvel élément pour afficher le texte complet -->
@@ -97,36 +106,26 @@
 
     <h2>Partager la combinaison 📢</h2>
     <div class="button-group">
-      <button onclick="shareOnTwitter()">
-        <i class="fa fa-twitter"></i> Twitter
-    </button>
-    
-    <button onclick="shareOnFacebook()">
-        <i class="fa fa-facebook"></i> Facebook
-    </button>
-    
-    <button onclick="shareOnWhatsApp()">
-        <i class="fa fa-whatsapp"></i> WhatsApp
-    </button>
-    
-    <button onclick="shareByEmail()">
-        <i class="fa fa-envelope"></i> Email
-    </button>
-    
-    <button onclick="copyToClipboard()">
-        <i class="fa fa-copy"></i> Copier
-    </button>
+      <button onclick="shareOnTwitter()">Partager sur Twitter 🐦</button>
+      <button onclick="shareOnWhatsApp()">Partager sur WhatsApp 📲</button>
+      <button onclick="shareOnFacebook()">Partager sur Facebook 📘</button>
+      <button onclick="shareByEmail()">Partager par Email ✉️</button>
+      <button onclick="generateImage()">Télécharger l'image pour Instagram 📸</button>
     </div>
     
     <div id="statistics">
       <h2>Statistiques 🧩</h2>
-      <p id="totalCombinations" class="">Total des combinaisons notées :</p>
-      <p id="averageNote" class="">Note moyenne :</p>
-      <p id="bestNote" class="">Meilleure note :</p>
-      <p id="worstNote" class="">Pire note :</p>
+      <p id="totalCombinations" class="">Total des combinaisons notées : 3</p>
+      <p id="averageNote" class="">Note moyenne : 6.67</p>
+      <p id="bestNote" class="">Meilleure note : 8</p>
+      <p id="worstNote" class="">Pire note : 6</p>
     </div>
 
     <div id="history">
+      <h3>Historique des combinaisons :</h3>
+      <div>1. Grandissant exceptionnel en professionnel l'erreur tout mon genre. (Note : 6/10)</div>
+      <div>2. La en l'erreur mon. (Note : 6/10)</div>
+      <div>3. Moi-même souveraine rêveur pour grandissant proscrite en mon intelligence professionnel la exceptionnel suis métier. (Note : 8/10)</div>
       <div style="margin-top: 10px;">
         <button onclick="sortHistoryUp()">⬆️</button>
         <button onclick="sortHistoryDown()">⬇️</button>
@@ -136,10 +135,9 @@
       </div>
       <button id="resetCacheButton" onclick="resetCache()">Reset du cache ♻️</button>
     </div>
+
+    <audio id="typewriterSound" src="sons/typewriter.mp3" preload="auto"></audio>
   </div>
-  <script type="module" src="script.js"></script>
-
-  <div id="notificationBar" class="notification-bar" style="display: none;"></div>
+  <script src="script.js"></script>
 </body>
-
 </html>
