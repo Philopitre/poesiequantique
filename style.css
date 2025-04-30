@@ -1,319 +1,61 @@
-/* ============================================
- * SYSTÈME DE DESIGN - CONFIGURATION
- * ============================================ */
- :root {
-  /* Palette de couleurs - Mode Clair */
-  --color-primary-dark: #012E40;   /* Bleu foncé profond - Utilisé pour les éléments importants et l'ancrage visuel */
-  --color-primary: #024959;        /* Bleu principal - Couleur dominante de l'interface */
-  --color-secondary: #026773;      /* Bleu-vert - Pour les éléments secondaires et accents modérés */
-  --color-accent: #3CA6A6;         /* Turquoise - Pour mettre en valeur les actions et éléments interactifs */
-  --color-background: #F2E3D5;     /* Beige clair - Fond d'écran principal, doux et chaleureux */
-  --color-white: #fff;             /* Blanc pur - Pour les surfaces et cartes en mode clair */
-  --color-text: #012E40;           /* Bleu foncé - Texte principal, offrant un bon contraste sur fond clair */
-  
-  /* Couleurs Mode Sombre - Variantes adaptées pour réduire la fatigue visuelle */
- --dark-color-background: #06111F; /* Fond très sombre */
---dark-color-white: #091428;       /* Fond pour cartes / boutons */
---dark-color-text: #E0E0E0;         /* Texte très clair */
---dark-color-accent: #193050;       /* Bleu vif pour les accents */
---dark-color-primary-dark: #002147; /* Bleu nuit profond pour fonds de mots */
---dark-color-primary: #082240;      /* Bleu minéral intense */
---dark-color-secondary: #002147;    /* Secondaire, même famille */
-  
-  /* Typographie - Système de polices équilibré */
-  --font-primary: 'Poppins', 'Helvetica', sans-serif;  /* Police principale sans-serif moderne */
-  --font-serif: 'Georgia', serif;                      /* Police serif pour les contrastes textuels */
-  --font-mono: 'Courier New', monospace;               /* Police monospace pour code et données techniques */
-  --font-size-base: 16px;        /* Taille de base - Optimale pour la lisibilité sur écran */
-  --font-size-small: 0.9rem;     /* Pour informations secondaires et annotations */
-  --font-size-medium: 1.1rem;    /* Légèrement plus grand que la base pour les textes importants */
-  --font-size-large: 1.2rem;     /* Pour sous-titres et contenus mis en avant */
-  --font-size-xl: 1.5rem;        /* Pour titres de section */
-  --font-size-xxl: 2rem;         /* Pour titres principaux */
-  
-  /* Espacements - Système rythmique pour une mise en page harmonieuse */
-  --spacing-xs: 4px;     /* Espacement minimal entre éléments liés */
-  --spacing-sm: 8px;     /* Espacement standard entre composants proches */
-  --spacing-md: 15px;    /* Espacement moyen pour délimiter les sections */
-  --spacing-lg: 20px;    /* Grand espacement pour séparer clairement les zones */
-  --spacing-xl: 30px;    /* Espacement maximal pour une séparation visuelle forte */
-  
-  /* Bordures et arrondis - Système cohérent d'arrondi */
-  --border-radius-sm: 4px;           /* Arrondi subtil pour petits éléments */
-  --border-radius-md: 8px;           /* Arrondi standard pour la plupart des composants */
-  --border-radius-lg: 12px;          /* Arrondi prononcé pour éléments importants */
-  --border-radius-xl: 15px;          /* Arrondi très visible pour conteneurs principaux */
-  --border-radius-circle: 50%;       /* Forme circulaire parfaite */
-  
-  /* Ombres - Système d'élévation pour créer de la profondeur */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);   /* Ombre légère - Élévation minimale */
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);    /* Ombre moyenne - Élévation standard */
-  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);  /* Ombre prononcée - Éléments mis en avant */
-  --shadow-xl: 0 12px 20px rgba(0, 0, 0, 0.2);  /* Ombre maximale - Éléments flottants */
-  
-  /* Ombres Mode Sombre - Plus intenses pour contraste sur fond sombre */
-  --dark-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);     /* Ombre légère renforcée */
-  --dark-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25);    /* Ombre moyenne intensifiée */
-  --dark-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);    /* Grande ombre plus prononcée */
-  --dark-shadow-xl: 0 12px 20px rgba(0, 0, 0, 0.4);   /* Ombre maximale dramatique */
-  
-  /* Transitions - Animation fluide des interactions */
-  --transition-standard: all 0.3s ease;   /* Transition universelle équilibrée */
-}
-
-
-/* ============================================
- * GESTION DU THÈME SOMBRE
- * ============================================ */
-/* Application des variables du mode sombre */
-body.dark-mode {
-  --color-primary-dark: var(--dark-color-primary-dark);
-  --color-primary: var(--dark-color-primary);
-  --color-secondary: var(--dark-color-secondary);
-  --color-accent: var(--dark-color-accent);
-  --color-background: var(--dark-color-background);
-  --color-white: var(--dark-color-white);
-  --color-text: var(--dark-color-text);
-  --shadow-sm: var(--dark-shadow-sm);
-  --shadow-md: var(--dark-shadow-md);
-  --shadow-lg: var(--dark-shadow-lg);
-  --shadow-xl: var(--dark-shadow-xl);
-}
-
-/* Transition douce lors du changement de thème */
-body.theme-transition {
-  transition: background-color 0.6s ease-in-out, color 0.6s ease-in-out;
-}
-
-/* ============================================
- * STYLES DE BASE ET TYPOGRAPHIE
- * ============================================ */
-body {
-  margin: 0;
-  font-family: var(--font-primary);
-  background-color: var(--color-background);
-  color: var(--color-text);
-  text-align: center;
-  line-height: 1.6;
-  font-size: var(--font-size-base);
-  transition: background-color 0.3s ease, color 0.3s ease;  /* Transition fluide des couleurs */
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--spacing-lg);
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Hiérarchie typographique */
-h1 {
-  color: var(--color-primary);
-  font-weight: 700;
-  margin-bottom: var(--spacing-lg);
-  font-size: var(--font-size-xxl);
-}
-
-h2 {
-  color: var(--color-secondary);
-  margin-top: var(--spacing-xl);
-  font-weight: 600;
-  font-size: var(--font-size-xl);
-}
-
-h3 {
-  color: var(--color-secondary);
-  font-size: var(--font-size-large);
-}
-
-/* ============================================
- * SÉLECTEUR DE THÈME - INTERRUPTEUR JOUR/NUIT
- * ============================================ */
-.theme-switch-wrapper {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  z-index: 100;  /* Assure que l'interrupteur reste visible */
-}
-
-.theme-switch {
-  display: inline-block;
-  height: 34px;
-  position: relative;
-  width: 60px;
-}
-
-.theme-switch input {
-  display: none;  /* Masque la case à cocher native */
-}
-
-/* Style de l'interrupteur coulissant */
-.slider {
-  background-color: var(--color-primary-dark);
-  bottom: 0;
-  cursor: pointer;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: .4s;
-  border-radius: 34px;
-}
-
-/* Bouton coulissant */
-.slider:before {
-  background-color: var(--color-white);
-  bottom: 4px;
-  content: "";
-  height: 26px;
-  left: 4px;
-  position: absolute;
-  transition: .4s;
-  width: 26px;
-  border-radius: 50%;
-}
-
-/* État actif de l'interrupteur */
-input:checked + .slider {
-  background-color: var(--color-accent);
-}
-
-input:checked + .slider:before {
-  transform: translateX(26px);  /* Décalage du bouton vers la droite */
-}
-
-/* Icônes soleil/lune pour le thème */
-.slider .icon {
-  position: absolute;
-  top: 7px;
-  font-size: 20px;
-  transition: opacity 0.2s ease;
-}
-
-.slider .sun-icon {
-  left: 7px;
-  opacity: 1;
-  color: #FFD700;  /* Jaune doré pour le soleil */
-}
-
-.slider .moon-icon {
-  right: 7px;
-  opacity: 0;
-  color: #FFFFFF;  /* Blanc pour la lune */
-}
-
-/* Gestion de la visibilité des icônes selon le thème */
-input:checked + .slider .sun-icon {
-  opacity: 0;
-}
-
-input:checked + .slider .moon-icon {
-  opacity: 1;
-}
-
-/* ============================================
- * COMPTEUR DE MOTS SÉLECTIONNÉS
- * ============================================ */
-.selected-words-counter {
-  background-color: var(--color-secondary);
-  color: var(--color-white);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  margin: var(--spacing-sm) 0;
-  font-weight: 600;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-standard);
-}
-
-/* Animation subtile au survol */
-.selected-words-counter:hover {
-  background-color: var(--color-primary);
-  transform: translateY(-2px);  /* Effet de lévitation légère */
-}
-
-/* Bulle numérique contenant le nombre de mots */
-#selectedWordsCount {
-  display: inline-block;
-  background-color: var(--color-background);
-  color: var(--color-primary);
-  border-radius: var(--border-radius-circle);
-  width: 28px;
-  height: 28px;
-  line-height: 28px;
-  text-align: center;
-  margin-left: var(--spacing-sm);
-  font-weight: 700;
-}
-
-/* ============================================
- * STYLES DES MOTS CLIQUABLES
- * ============================================ */
-/* Premier groupe de mots - Style sérif avec italique */
+/* Ajout du style pour l'affichage du texte complet */
 .word-group-1 {
-  color: var(--color-white);
-  font-family: var(--font-serif);
+  color: #ffffff;
+  font-family: 'Georgia', serif;
   font-weight: 700;
   font-style: italic;
-  background-color: var(--color-primary-dark);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
+  background-color: #012E40;
+  padding: 4px 8px;
+  border-radius: 4px;
   margin: 0 3px;
-  transition: var(--transition-standard);
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);  /* Ombre de texte pour lisibilité */
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
   box-shadow: 0 2px 4px rgba(1, 46, 64, 0.2);
-  border: 1px solid var(--color-primary);
+  border: 1px solid #024959;
   letter-spacing: 0.5px;
   cursor: pointer;
 }
 
-/* Second groupe de mots - Style monospace avec espacement */
 .word-group-2 {
-  color: var(--color-white);
-  font-family: var(--font-mono);
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
   font-weight: 700;
-  background-color: var(--color-secondary);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
+  text-transform: uppercase;
+  background-color: #026773;
+  padding: 4px 8px;
+  border-radius: 4px;
   margin: 0 3px;
-  transition: var(--transition-standard);
+  transition: all 0.3s ease;
   letter-spacing: 1px;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
   box-shadow: 0 2px 4px rgba(2, 103, 115, 0.2);
-  border: 1px solid var(--color-accent);
+  border: 1px solid #3CA6A6;
   cursor: pointer;
 }
 
-/* Animation au survol des mots */
 .word-group-1:hover, .word-group-2:hover {
-  transform: translateY(-2px);  /* Légère élévation */
-  box-shadow: var(--shadow-md);  /* Ombre plus prononcée */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* État caché/désactivé des mots */
 .word-hidden {
   opacity: 0.2;
-  transform: scale(0.85);  /* Réduction légère */
-  filter: grayscale(100%);  /* Suppression des couleurs */
+  transform: scale(0.85);
+  filter: grayscale(100%);
 }
 
-/* Conteneur principal des mots */
+/* Ajuster l'espacement et le style de la div contenant les mots */
 .full-word-list {
-  line-height: 2.5;  /* Espacement vertical généreux */
-  padding: var(--spacing-lg);
-  background-color: var(--color-background);
+  line-height: 2.5;
+  padding: 20px;
+  background-color: #F2E3D5;
   font-size: 1.05rem;
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--color-accent);
 }
 
 /* Animation pour les mots qui disparaissent/apparaissent */
 @keyframes toggleWord {
   0% { transform: scale(1); }
-  50% { transform: scale(0.8); }  /* Contraction centrale */
+  50% { transform: scale(0.8); }
   100% { transform: scale(1); }
 }
 
@@ -321,195 +63,225 @@ input:checked + .slider .moon-icon {
   animation: toggleWord 0.3s ease;
 }
 
-/* ============================================
- * ÉLÉMENTS D'INTERFACE - BOUTONS ET CONTRÔLES
- * ============================================ */
-/* Style de base des boutons */
-button {
-  background-color: var(--color-accent);
-  color: var(--color-white);
-  border: none;
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-md) var(--spacing-lg);
-  margin: var(--spacing-sm);
-  cursor: pointer;
-  font-weight: 500;
-  box-shadow: 0 4px 6px rgba(60, 166, 166, 0.25);  /* Ombre subtile */
-  transition: var(--transition-standard);
-  font-size: var(--font-size-small);
-  width: auto;
-  min-width: 120px;
+/* Ajuster l'espacement et le style de la div contenant les mots */
+.full-word-list {
+  line-height: 2.5;
+  padding: 20px;
+  background-color: #F2E3D5;
+  font-size: 1.05rem;
 }
 
-/* États interactifs des boutons */
-button:hover {
-  background-color: var(--color-secondary);
-  transform: translateY(-3px);  /* Effet de flottement */
-  box-shadow: 0 6px 8px rgba(2, 103, 115, 0.35);  /* Ombre renforcée */
+/* Ajuster l'espacement de la div contenant les mots pour une meilleure lisibilité */
+.full-word-list {
+  line-height: 2.2;
+  padding: 20px;
+  background-color: #F2E3D5;
 }
 
-button:active {
-  transform: translateY(-1px);  /* Retour partiel lors du clic */
+/* Ajuster l'espacement de la div contenant les mots pour une meilleure lisibilité */
+.full-word-list {
+  line-height: 2.2;
+  padding: 20px;
 }
-
-/* Variante secondaire des boutons */
-button.secondary {
-  background-color: var(--color-primary);
-  box-shadow: 0 4px 6px rgba(2, 73, 89, 0.25);
-}
-
-button.secondary:hover {
-  background-color: var(--color-primary-dark);
-  box-shadow: 0 6px 8px rgba(1, 46, 64, 0.35);
-}
-
-/* Style des menus déroulants */
-select {
-  background-color: var(--color-white);
-  border: 2px solid var(--color-accent);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  margin: var(--spacing-sm) 0;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.3s;
-  box-shadow: var(--shadow-sm);
-  color: var(--color-primary);
-  max-width: 100%;
-  width: 250px;
-}
-
-/* État de focus des sélecteurs */
-select:focus {
-  border-color: var(--color-secondary);
-  box-shadow: 0 0 0 3px rgba(2, 103, 115, 0.2);  /* Halo de focus */
-}
-
-/* ============================================
- * CONTENEURS DE RÉSULTATS ET AFFICHAGE
- * ============================================ */
-/* Zone de résultat fixée en haut */
-.result-container {
-  position: sticky;
-  top: 0;
-  z-index: 10;  /* Premier plan */
-  padding: var(--spacing-md) 0;
-  background-color: var(--color-background);
-  border-bottom: 1px solid var(--color-accent);
-  width: 100%;
-}
-
-/* Boîte de résultat principale */
-.result {
-  background-color: var(--color-white);
-  color: var(--color-text);
-  font-family: var(--font-primary);
-  font-size: var(--font-size-medium);
-  font-weight: 600;
-  line-height: 1.7;
-  padding: var(--spacing-lg);
-  margin: var(--spacing-lg) auto;
-  max-width: 95%;
-  min-height: 60px;
-  border: 1px solid var(--color-accent);
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--shadow-lg);
-  transition: var(--transition-standard);
-  position: relative;
-  word-wrap: break-word;
+/* Styles existants conservés */
+body {
+  margin: 0;
+  font-family: 'Poppins', 'Helvetica', sans-serif;
+  background-color: #F2E3D5;
+  color: #012E40;
   text-align: center;
-  user-select: none;  /* Empêche la sélection du texte */
-  caret-color: transparent;  /* Masque le curseur de texte */
+  line-height: 1.6;
+  font-size: 16px;
 }
 
-/* Animation au survol du résultat */
-.result:hover {
-  transform: translateY(-5px);  /* Élévation prononcée */
-  box-shadow: var(--shadow-xl);  /* Ombre dramatique */
-}
-
-/* Groupe de boutons alignés */
-.button-group {
-  margin: var(--spacing-lg) 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--spacing-sm);
-}
-
-/* ============================================
- * SYSTÈME D'ÉVALUATION ET NOTATION
- * ============================================ */
-/* Conteneur de l'évaluation */
-.rating-container {
-  margin-top: var(--spacing-xl);
-  padding: var(--spacing-md);
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--shadow-sm);
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Étiquette de la notation */
-.rating-label {
-  display: block;
-  margin-bottom: var(--spacing-md);
-  font-weight: 600;
-  color: var(--color-primary);
+h1 {
+  color: #024959;
+  font-weight: 700;
+  margin-bottom: 20px;
+  font-size: 2rem;
 }
 
-/* Disposition des options de notation */
+h2 {
+  color: #026773;
+  margin-top: 30px;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+h3 {
+  color: #026773;
+  font-size: 1.2rem;
+}
+
+button {
+  background-color: #3CA6A6;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  margin: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(60, 166, 166, 0.25);
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  width: auto;
+  min-width: 120px;
+}
+
+button:hover {
+  background-color: #026773;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 8px rgba(2, 103, 115, 0.35);
+}
+
+button:active {
+  transform: translateY(-1px);
+}
+
+button.secondary {
+  background-color: #024959;
+  box-shadow: 0 4px 6px rgba(2, 73, 89, 0.25);
+}
+
+button.secondary:hover {
+  background-color: #012E40;
+  box-shadow: 0 6px 8px rgba(1, 46, 64, 0.35);
+}
+
+select {
+  background-color: #fff;
+  border: 2px solid #3CA6A6;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin: 10px 0;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  color: #024959;
+  max-width: 100%;
+  width: 250px;
+}
+
+select:focus {
+  border-color: #026773;
+  box-shadow: 0 0 0 3px rgba(2, 103, 115, 0.2);
+}
+
+/* Affichage en haut du document */
+.result-container {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 15px 0;
+  background-color: #F2E3D5;
+  border-bottom: 1px solid #3CA6A6;
+  width: 100%;
+}
+
+.result {
+  background-color: #fff;
+  color: #012E40;
+  font-family: 'Poppins', 'Helvetica', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.7;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 95%;
+  min-height: 60px;
+  border: 1px solid #3CA6A6;
+  border-radius: 15px; 
+  box-shadow: 0 8px 16px rgba(1, 46, 64, 0.08);
+  transition: transform 0.3s ease;
+  position: relative;
+  word-wrap: break-word;
+  text-align: center;
+  user-select: none;
+  caret-color: transparent;
+}
+
+.result:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(1, 46, 64, 0.12);
+}
+
+.button-group {
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.rating-container {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(1, 46, 64, 0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rating-label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #024959;
+}
+
 .rating {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--spacing-sm);
-  margin: var(--spacing-sm) 0;
+  gap: 8px;
+  margin: 10px 0;
 }
 
-/* Masque des boutons radio natifs */
 .rating input[type="radio"] {
   display: none;
 }
 
-/* Style des étiquettes de notation */
 .rating label {
-  background-color: var(--color-background);
-  border-radius: var(--border-radius-circle);
+  background-color: #F2E3D5;
+  border-radius: 50%;
   width: 36px;
   height: 36px;
   line-height: 36px;
   cursor: pointer;
-  transition: var(--transition-standard);
+  transition: all 0.3s ease;
   display: inline-block;
   font-weight: 600;
-  color: var(--color-primary-dark);
+  color: #012E40;
 }
 
-/* Style de l'option sélectionnée */
 .rating input[type="radio"]:checked+label {
-  background-color: var(--color-accent);
-  color: var(--color-white);
-  transform: scale(1.1);  /* Légère mise en avant */
+  background-color: #3CA6A6;
+  color: white;
+  transform: scale(1.1);
   box-shadow: 0 2px 8px rgba(60, 166, 166, 0.4);
 }
 
-/* ============================================
- * CURSEUR ET INDICATEURS VISUELS
- * ============================================ */
-/* Indicateur de saisie clignotant */
-.cursor {
+/*.cursor {
   display: inline-block;
   width: 2px;
   height: 1.2em;
-  background-color: var(--color-secondary);
+  background-color: #026773;
   margin-left: 4px;
   vertical-align: middle;
-  animation: blink 1s steps(1) infinite;  /* Animation de clignotement */
+  animation: blink 1s steps(1) infinite;
 }
 
-/* Animation du clignotement */
 @keyframes blink {
   0%, 100% {
     opacity: 1;
@@ -519,124 +291,116 @@ select:focus {
   }
 }
 
-/* Zone de retour utilisateur */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}*/
+
 #feedback {
-  margin-top: var(--spacing-md);
+  margin-top: 15px;
   font-style: italic;
-  color: var(--color-primary);
+  color: #024959;
   height: 40px;
-  transition: var(--transition-standard);
+  transition: all 0.3s ease;
 }
 
-/* ============================================
- * STATISTIQUES ET HISTORIQUE
- * ============================================ */
-/* Panneau de statistiques */
 #statistics {
   margin-top: 40px;
-  padding: var(--spacing-md);
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--shadow-sm);
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(1, 46, 64, 0.05);
   transition: transform 0.3s, opacity 0.3s;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Lignes de statistiques */
 #statistics p {
-  transition: var(--transition-standard);
-  padding: var(--spacing-sm) 0;
-  border-bottom: 1px solid var(--color-accent);  /* Séparateur visuel */
+  transition: all 0.3s ease;
+  padding: 8px 0;
+  border-bottom: 1px solid #3CA6A6;
   margin: 0;
 }
 
-/* Suppression du séparateur pour le dernier élément */
 #statistics p:last-child {
   border-bottom: none;
 }
 
-/* Animation pour les statistiques mises à jour */
 #statistics.animate {
-  transform: scale(1.03);  /* Léger zoom pour attirer l'attention */
+  transform: scale(1.03);
 }
 
 #statistics p.animate {
-  background-color: rgba(60, 166, 166, 0.1);  /* Surbrillance subtile */
-  color: var(--color-primary);
+  background-color: rgba(60, 166, 166, 0.1);
+  color: #024959;
   font-weight: 600;
 }
 
-/* Panneau d'historique */
 #history {
-  margin-top: var(--spacing-xl);
-  padding: var(--spacing-md);
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--shadow-sm);
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(1, 46, 64, 0.05);
   text-align: left;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Entrées d'historique */
 #history div {
-  padding: var(--spacing-sm);
-  border-bottom: 1px solid var(--color-accent);
+  padding: 10px;
+  border-bottom: 1px solid #3CA6A6;
   transition: background-color 0.3s ease;
-  word-wrap: break-word;  /* Évite le débordement des longs textes */
+  word-wrap: break-word;
 }
 
-/* Surbrillance au survol des entrées d'historique */
 #history div:hover {
-  background-color: rgba(242, 227, 213, 0.5);  /* Teinte légère */
+  background-color: rgba(242, 227, 213, 0.5);
 }
 
-/* Adaptation de la surbrillance en mode sombre */
-body.dark-mode #history div:hover {
-  background-color: rgba(60, 60, 60, 0.5);  /* Teinte sombre adaptée */
-}
-
-/* Suppression de la bordure pour la dernière entrée */
 #history div:last-of-type {
   border-bottom: none;
 }
 
-/* ============================================
- * SYSTÈME DE NOTIFICATIONS
- * ============================================ */
-/* Toasts de notification */
+/* Styles pour les notifications */
 .notification {
   position: fixed;
-  bottom: var(--spacing-lg);
+  bottom: 20px;
   left: 50%;
-  transform: translateX(-50%);  /* Centrage horizontal */
-  background-color: var(--color-secondary);
-  color: var(--color-white);
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-radius: var(--border-radius-lg);
-  z-index: 1000;  /* Premier plan absolu */
-  transition: var(--transition-standard);
+  transform: translateX(-50%);
+  background-color: #026773;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  z-index: 1000;
+  transition: all 0.5s ease;
   box-shadow: 0 5px 15px rgba(1, 46, 64, 0.2);
   font-weight: 500;
   max-width: 90%;
-  word-wrap: break-word;  /* Gestion des longs messages */
+  word-wrap: break-word;
 }
 
-/* Animation de disparition des notifications */
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.9rem;
+  color: #024959;
+  background-color: transparent;
+  font-family: 'Poppins', sans-serif;
+  margin-top: 40px;
+}
+
 .notification.fade-out {
   opacity: 0;
-  transform: translateX(-50%) translateY(30px);  /* Glissement vers le bas */
+  transform: translateX(-50%) translateY(30px);
 }
 
-/* ============================================
- * ANIMATIONS ET EFFETS VISUELS
- * ============================================ */
-/* Animation d'apparition progressive */
+/* Animation pour les nouveaux éléments */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);  /* Entrée par le bas */
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -644,22 +408,19 @@ body.dark-mode #history div:hover {
   }
 }
 
-/* Application de l'animation aux nouvelles entrées */
 .history-entry {
   animation: fadeIn 0.5s ease-out;
 }
 
-/* ============================================
- * RESPONSIVE DESIGN - ADAPTATIONS MOBILES
- * ============================================ */
+/* Media Queries pour la responsivité */
 /* Appareils très petits (téléphones, moins de 576px) */
 @media (max-width: 575.98px) {
   body {
-    font-size: 14px;  /* Réduction globale de la taille du texte */
+    font-size: 14px;
   }
   
   h1 {
-    font-size: 1.5rem;  /* Titres plus compacts */
+    font-size: 1.5rem;
   }
   
   h2 {
@@ -667,99 +428,52 @@ body.dark-mode #history div:hover {
   }
   
   .container {
-    padding: var(--spacing-sm);  /* Marges réduites */
+    padding: 10px;
   }
   
   button {
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: 10px 16px;
     font-size: 0.85rem;
     margin: 5px;
-    min-width: 100px;  /* Boutons plus étroits */
+    min-width: 100px;
+    width: 100%;
   }
   
   .button-group {
-    flex-wrap: wrap;
-    gap: 5px;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .button-group button {
+    width: 100%;
+    margin: 5px 0;
   }
   
   select {
-    width: 100%;  /* Sélecteurs pleine largeur */
+    width: 100%;
     max-width: 100%;
   }
   
   .result {
-    padding: var(--spacing-md);
+    padding: 15px;
     font-size: 1rem;
   }
   
   .rating label {
-    width: 30px;  /* Boutons de notation plus petits */
+    width: 30px;
     height: 30px;
     line-height: 30px;
     font-size: 0.9rem;
   }
   
   #history div {
-    padding: var(--spacing-sm);
+    padding: 8px;
     font-size: 0.9rem;
   }
   
   .full-word-list {
     font-size: 0.9rem;
-    padding: var(--spacing-md);
-    line-height: 2.2;
-  }
-  
-  .word-group-1, .word-group-2 {
-    padding: 3px 6px;
-    margin: 0 2px 5px 2px;
-    display: inline-block;  /* Ajustement pour éviter les débordements */
-  }
-  
-  /* Ajustement pour les boutons de partage */
-  .button-group button {
-    width: calc(50% - 10px);  /* Disposition sur deux colonnes */
-    margin: 5px;
-  }
-  
-  /* Ajuster les boutons de notation */
-  .rating {
-    gap: 5px;
-  }
-  
-  /* Réduction du sélecteur de thème */
-  .theme-switch-wrapper {
-    top: 10px;
-    right: 10px;
-  }
-  
-  .theme-switch {
-    height: 26px;
-    width: 48px;
-  }
-  
-  .slider:before {
-    height: 20px;
-    width: 20px;
-    bottom: 3px;
-    left: 3px;
-  }
-  
-  input:checked + .slider:before {
-    transform: translateX(22px);
-  }
-  
-  .slider .icon {
-    font-size: 14px;
-    top: 6px;
-  }
-  
-  .slider .sun-icon {
-    left: 6px;
-  }
-  
-  .slider .moon-icon {
-    right: 6px;
+    padding: 10px;
   }
 }
 
@@ -770,11 +484,11 @@ body.dark-mode #history div:hover {
   }
   
   .container {
-    padding: var(--spacing-md);
+    padding: 15px;
   }
   
   button {
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: 10px 20px;
   }
   
   .button-group {
@@ -782,35 +496,35 @@ body.dark-mode #history div:hover {
     flex-wrap: wrap;
   }
   
-  select {
-    width: 80%;  /* Largeur optimisée */
+  .button-group button {
+    margin: 5px;
+    width: calc(50% - 20px);
   }
   
-  .full-word-list {
-    padding: var(--spacing-md);
-    line-height: 2.3;
+  select {
+    width: 80%;
   }
 }
 
 /* Appareils moyens (tablettes paysage, moins de 992px) */
 @media (min-width: 768px) and (max-width: 991.98px) {
   .container {
-    padding: var(--spacing-lg);
+    padding: 20px;
   }
   
   .button-group button {
-    margin: var(--spacing-sm);
+    margin: 8px;
   }
 }
 
 /* Grands écrans (desktops, moins de 1200px) */
 @media (min-width: 992px) {
   .container {
-    padding: var(--spacing-xl);  /* Espacement plus généreux sur grands écrans */
+    padding: 30px;
   }
   
   h1 {
-    font-size: 2.2rem;  /* Titres plus imposants */
+    font-size: 2.2rem;
   }
   
   h2 {
@@ -818,31 +532,28 @@ body.dark-mode #history div:hover {
   }
   
   .result {
-    font-size: var(--font-size-large);  /* Texte plus lisible */
+    font-size: 1.2rem;
   }
 }
 
-/* ============================================
- * OPTIMISATIONS POUR ORIENTATION PAYSAGE
- * ============================================ */
-/* Ajustements pour les appareils mobiles en mode paysage */
+/* Pour gérer l'orientation sur les appareils mobiles */
 @media (orientation: landscape) and (max-height: 500px) {
   .container {
-    padding: var(--spacing-sm);  /* Réduction des marges verticales */
+    padding: 10px;
   }
   
   h1 {
     margin-top: 5px;
-    margin-bottom: var(--spacing-sm);  /* Titres plus compacts */
+    margin-bottom: 10px;
   }
   
   .button-group {
-    margin: var(--spacing-sm) 0;  /* Espacement réduit */
+    margin: 10px 0;
   }
   
   .result {
-    margin: var(--spacing-sm) auto;
-    min-height: 40px;  /* Hauteur minimale réduite */
+    margin: 10px auto;
+    min-height: 40px;
   }
   
   select {
@@ -851,30 +562,6 @@ body.dark-mode #history div:hover {
   
   .full-word-list {
     margin: 5px auto;
-    padding: var(--spacing-sm);  /* Réduction des marges internes */
-  }
-  
-  /* Optimisation des boutons en mode paysage */
-  .button-group button {
-    padding: var(--spacing-sm) var(--spacing-md);
-    margin: 4px;  /* Espacement minimal */
-  }
-  
-  /* Optimisation de la grille de notation en mode paysage */
-  .rating {
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-  
-  .rating label {
-    width: 32px;
-    height: 32px;
-    line-height: 32px;  /* Taille réduite mais lisible */
-  }
-  
-  /* Repositionnement du sélecteur de thème */
-  .theme-switch-wrapper {
-    top: 5px;
-    right: 5px;  /* Placement plus discret */
+    padding: 10px;
   }
 }
