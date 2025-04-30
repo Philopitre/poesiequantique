@@ -8,7 +8,15 @@ import {
   resetCache 
 } from './src/modules/history.js';
 import { exportTXT, exportPDF, generateImage } from './src/modules/export.js';
-import { shareText } from './src/modules/sharing.js';
+import { 
+  shareText, 
+  shareOnTwitter, 
+  shareOnFacebook, 
+  shareOnWhatsApp, 
+  shareByEmail,
+  copyToClipboard,
+  shareOn
+} from './src/modules/sharing.js';
 import { showNotification, showError } from './src/modules/ui.js';
 import { 
   toggleWordVisibility, 
@@ -30,16 +38,11 @@ window.generateImage = generateImage;
 window.toggleWordVisibility = toggleWordVisibility;
 window.resetAllWords = resetAllWords;
 
-window.shareOnTwitter = () => shareText("twitter");
-window.shareOnFacebook = () => shareText("facebook");
-window.shareOnWhatsApp = () => shareText("whatsapp");
-window.shareByEmail = () => shareText("email");
-
-// Utilitaires internes
-window.copyToClipboard = function () {
-    const result = document.getElementById("result");
-    if (!result) return;
-    navigator.clipboard.writeText(result.textContent)
-        .then(() => showNotification("Copié dans le presse-papier !"))
-        .catch(err => showError("Échec de la copie : " + err));
-};
+// Fonctions de partage
+window.shareText = shareText;
+window.shareOnTwitter = shareOnTwitter;
+window.shareOnFacebook = shareOnFacebook;
+window.shareOnWhatsApp = shareOnWhatsApp;
+window.shareByEmail = shareByEmail;
+window.shareOn = shareOn;
+window.copyToClipboard = copyToClipboard;

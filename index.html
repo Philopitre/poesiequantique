@@ -97,11 +97,25 @@
 
     <h2>Partager la combinaison 📢</h2>
     <div class="button-group">
-      <button onclick="shareOnTwitter()">Partager sur Twitter 🐦</button>
-      <button onclick="shareOnWhatsApp()">Partager sur WhatsApp 📲</button>
-      <button onclick="shareOnFacebook()">Partager sur Facebook 📘</button>
-      <button onclick="shareByEmail()">Partager par Email ✉️</button>
-      <button onclick="generateImage()">Télécharger l'image pour Instagram 📸</button>
+      <button onclick="shareOnTwitter()">
+        <i class="fa fa-twitter"></i> Twitter
+    </button>
+    
+    <button onclick="shareOnFacebook()">
+        <i class="fa fa-facebook"></i> Facebook
+    </button>
+    
+    <button onclick="shareOnWhatsApp()">
+        <i class="fa fa-whatsapp"></i> WhatsApp
+    </button>
+    
+    <button onclick="shareByEmail()">
+        <i class="fa fa-envelope"></i> Email
+    </button>
+    
+    <button onclick="copyToClipboard()">
+        <i class="fa fa-copy"></i> Copier
+    </button>
     </div>
     
     <div id="statistics">
